@@ -5,7 +5,9 @@
 # include <liblist.h>
 # include <stdio.h>//
 
-# define HTAB_SET(X, Y)		htab_set(X, (t_dhtab *)Y);
+# define HTAB_CREATE(Y, Z)	create_htab(Z, Y);
+# define HTAB_SET(Y, Z)			htab_set(Y, (t_dhtab *)Z);
+# define HTAB_GET(X, Y, Z)	(Y *)htab_get(X, Z);
 
 typedef struct	s_dhtab
 {
@@ -15,11 +17,11 @@ typedef struct	s_dhtab
 
 typedef struct	s_htab
 {
-	void	*array;
-	char	*type;
-	int		length;
-	int		length_max;
-	int		(*hash)(char *);
+	t_dhtab	**array;
+	char		*type;
+	int			length;
+	int			length_max;
+	int			(*hash)(char *);
 }				t_htab;
 
 int		hash_pour_les_nuls(char *s);
