@@ -1,34 +1,30 @@
-CC = gcc
 NAME = libhtab
-LIB_NAME = $(NAME).a
-CFLAGS = -Wextra -Wall -Werror
+DEPENDENCIES = libft \
+								liblist
+SOURCES = create_htab.c \
+					htab_get.c \
+					htab_set.c
 
 SOURCES_FOLDER = sources
+
+CC = gcc
+LIB_NAME = $(NAME).a
+CFLAGS = -Wextra -Wall -Werror
 TEST_FORDER = test
 INCLUDES_FOLDER = includes
 OBJECTS_FOLDER = ../.objects/$(NAME)
-
-DEPENDENCIES = libft \
-								liblist
+INCLUDES = $(NAME).h
 
 SOURCES_DEPENDENCIES = $(foreach dep,$(DEPENDENCIES), ../$(dep)/$(dep).a)
-
-LIBRARIES = $(foreach dep,$(DEPENDENCIES), -L../$(dep)/ -$(subst lib,l,$(dep)))
+LIBRARIES = $(foreach dep, $(DEPENDENCIES), -L../$(dep)/ -$(subst lib,l,$(dep)))
 INCLUDES_LIBRARIES = $(foreach dep,$(DEPENDENCIES),-I ../$(dep)/includes)
 HEADERS_LIBRARIES = $(foreach dep,$(DEPENDENCIES),../$(dep)/includes/$(dep).h)
 MAKE_LIBRARIES = $(foreach dep,$(DEPENDENCIES),make -C ../$(dep);)
-
-INCLUDES = $(NAME).h
-
-SOURCES = create_htab.c \
-					htab_set.c \
-	  			htab_get.c \
+REBUILD_LIBRARIES = $(foreach dep,$(DEPENDENCIES),make re -C ../$(dep);)
 
 OBJECTS = $(SOURCES:%.c=%.o)
 
 all: init $(LIB_NAME)
-
-# dev: init $(MAIN_OBJECT) $(LIB_NAME)
 
 ifdef DEPENDENCIES
 init: $(SOURCES_DEPENDENCIES)
