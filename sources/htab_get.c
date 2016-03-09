@@ -1,11 +1,10 @@
-#include <htab.h>
+#include <libhtab.h>
 
 t_dhtab	*htab_get(t_htab htab, char *key)
 {
 	t_dhtab		*tmp;
 
 	tmp = htab.array[htab.hash(key) % htab.length_max];
-	printf("%d\n", htab.hash(key) % htab.length_max);
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, key))

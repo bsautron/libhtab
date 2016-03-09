@@ -1,46 +1,58 @@
 CC = gcc
-NAME = htab
+NAME = libhtab
+LIB_NAME = $(NAME).a
 CFLAGS = -Wextra -Wall -Werror
 
 SOURCES_FOLDER = sources
 TEST_FORDER = test
 INCLUDES_FOLDER = includes
-OBJECTS_FOLDER = .objects
-MAIN = main.c
-MAIN_OBJECT = $(OBJECTS_FOLDER)/$(MAIN:.c=.o)
+OBJECTS_FOLDER = ../.objects/$(NAME)
 
 DEPENDENCIES = libft \
 								liblist
 
-LIBRARIES = $(foreach dep, $(DEPENDENCIES), libraries/$(dep)/$(dep).a)
-INCLUDES_LIBRARIES = $(foreach dep,$(DEPENDENCIES),-I libraries/$(dep)/includes)
-HEADERS_LIBRARIES = $(foreach dep,$(DEPENDENCIES),libraries/$(dep)/includes/$(dep).h)
-MAKE_LIBRARIES = $(foreach dep,$(DEPENDENCIES),make -C libraries/$(dep);)
+SOURCES_DEPENDENCIES = $(foreach dep,$(DEPENDENCIES), ../$(dep)/$(dep).a)
+
+LIBRARIES = $(foreach dep,$(DEPENDENCIES), -L../$(dep)/ -$(subst lib,l,$(dep)))
+INCLUDES_LIBRARIES = $(foreach dep,$(DEPENDENCIES),-I ../$(dep)/includes)
+HEADERS_LIBRARIES = $(foreach dep,$(DEPENDENCIES),../$(dep)/includes/$(dep).h)
+MAKE_LIBRARIES = $(foreach dep,$(DEPENDENCIES),make -C ../$(dep);)
 
 INCLUDES = $(NAME).h
 
 SOURCES = create_htab.c \
 					htab_set.c \
 	  			htab_get.c \
-	  			\
-	  			hash_pour_les_nuls.c
 
 OBJECTS = $(SOURCES:%.c=%.o)
 
-all: init $(NAME)
+all: init $(LIB_NAME)
 
-init:
+# dev: init $(MAIN_OBJECT) $(LIB_NAME)
+
+ifdef DEPENDENCIES
+init: $(SOURCES_DEPENDENCIES)
 	$(MAKE_LIBRARIES)
-	mkdir -p $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)
+	@mkdir -p $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)
 
-$(NAME): $(MAIN_OBJECT) $(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, $(OBJECTS))
-	$(CC) $(CFLAGS) -o $@ $(MAIN_OBJECT) $(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, $(OBJECTS)) $(LIBRARIES)
+$(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, %.o): $(SOURCES_FOLDER)/%.c $(addprefix $(INCLUDES_FOLDER)/, $(INCLUDES))
+	$(CC) $(CFLAGS) -I $(INCLUDES_FOLDER) $(INCLUDES_LIBRARIES) -o $@ -c $<
+endif
+
+ifndef DEPENDENCIES
+init:
+	@mkdir -p $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)
+
+$(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, %.o): $(SOURCES_FOLDER)/%.c $(addprefix $(INCLUDES_FOLDER)/, $(INCLUDES))
+	$(CC) $(CFLAGS) -I $(INCLUDES_FOLDER) -o $@ -c $<
+endif
 
 $(MAIN_OBJECT): $(MAIN)
-	$(CC) $(CFLAGS) -I $(INCLUDES_FOLDER) -o $(MAIN_OBJECT) -c $(MAIN) $(INCLUDES_LIBRARIES)
+	$(CC) $(CFLAGS) -I $(INCLUDES_FOLDER) -o $(MAIN_OBJECT) -c $(MAIN)
 
-$(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, %.o): $(SOURCES_FOLDER)/%.c $(addprefix $(INCLUDES_FOLDER)/, $(INCLUDES)) $(HEADERS_LIBRARIES)
-	$(CC) $(CFLAGS) -I $(INCLUDES_FOLDER) -o $@ -c $< $(INCLUDES_LIBRARIES)
+$(LIB_NAME): $(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, $(OBJECTS))
+	ar rc $(LIB_NAME) $(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, $(OBJECTS))
+	ranlib $(LIB_NAME)
 
 clean:
 	rm -f $(addprefix $(OBJECTS_FOLDER)/$(SOURCES_FOLDER)/, $(OBJECTS))

@@ -1,13 +1,12 @@
-#ifndef HTAB_H
-# define HTAB_H
+#ifndef LIBHTAB_H
+# define LIBHTAB_H
 
 # include <libft.h>
 # include <liblist.h>
-# include <stdio.h>//
 
-# define HTAB_CREATE(Y, Z)	create_htab(Z, Y);
-# define HTAB_SET(Y, Z)			htab_set(Y, (t_dhtab *)Z);
-# define HTAB_GET(X, Y, Z)	(Y *)htab_get(X, Z);
+# define HTAB_CREATE(Y, Z)	create_htab(Y, Z)
+# define HTAB_SET(Y, Z)			htab_set(Y, (t_dhtab *)Z)
+# define HTAB_GET(X, Y, Z)	(Y *)htab_get(X, Z)
 
 typedef struct	s_dhtab
 {

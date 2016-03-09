@@ -1,4 +1,4 @@
-#include <htab.h>
+#include <libhtab.h>
 
 typedef struct	s_perso
 {
@@ -37,8 +37,8 @@ int		main(void)
 	HTAB_SET(&htab, she);
 	getter = HTAB_GET(htab, t_perso, "45556");
 	if (getter)
-		printf("%s\n", getter->job);
+		ft_putendl(getter->job);
 	else
-		printf("%s\n", "not found");
+		ft_putendl("not found");
 	return(0);
 }
