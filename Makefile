@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bsautron <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2016/04/03 19:28:36 by bsautron          #+#    #+#              #
+#    Updated: 2016/04/03 19:28:41 by bsautron         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = libhtab
 DEPENDENCIES = libft \
 								liblist
@@ -56,6 +68,6 @@ clean:
 	rm -rf $(OBJECTS_FOLDER)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME).a
 
 re: fclean all
