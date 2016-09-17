@@ -35,9 +35,8 @@ typedef struct	s_htab
 	int		(*hash)(char *);
 }				t_htab;
 
-int				hash_pour_les_nuls(char *s);
-t_htab			create_htab(int length_max, int (*hash)(char *));
-void			htab_set(t_htab *htab, t_dhtab *value);
-t_dhtab			*htab_get(t_htab htab, char *key);
+t_htab	create_htab(int length_max, int (*hash)(char *));
+void	htab_set(t_htab *htab, t_dhtab *value);
+t_dhtab	*htab_get(t_htab htab, char *key);
 
 #endif
